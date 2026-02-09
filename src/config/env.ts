@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const env = {
-  port: normalizePort(process.env.PORT) ?? 5000,
+  port: normalizePort(process.env.PORT) ?? 3000,
 };
 
 function normalizePort(value: string | undefined): number | undefined {
