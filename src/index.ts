@@ -2,7 +2,6 @@ import express from "express";
 
 import { env } from "./config/env";
 import connectDB from "./config/db";
-import { User } from "./models/User";
 import { requestLogger } from "./middlewares/requestLogger";
 import { apiRouter } from "./routes";
 
@@ -28,10 +27,8 @@ app.use((req, res) => {
 
 const startServer = async () => {
   await connectDB();
-  const user = await User.findOne();
-  console.log("Sample user:", user);
 
-  app.listen(env.port, () => {
+  app.listen(env.port, "0.0.0.0", () => {
     console.log(`Server listening on port ${env.port}`);
   });
 };
