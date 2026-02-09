@@ -3,18 +3,18 @@ import { Schema, model, Document } from "mongoose";
 interface IUser extends Document {
   username: string;
   email: string;
-  возраст: number;
+  age: number;
   isActive: boolean;
-  роли: string[];
+  role: string[];
   createdAt: Date;
 }
 
 const userSchema = new Schema<IUser>({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  возраст: { type: Number, required: true },
+  age: { type: Number, required: true },
   isActive: { type: Boolean, default: true },
-  роли: [{ type: String, required: true }],
+  role: [{ type: String, required: true }],
   createdAt: { type: Date, default: Date.now },
 }, {
   collection: "profi_users",
