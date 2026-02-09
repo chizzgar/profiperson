@@ -1,7 +1,8 @@
-import express from "express";
+import express, { type Request, type Response } from "express";
 
 import { env } from "./config/env";
 import connectDB from "./config/db";
+import { User } from "./models/User";
 import { requestLogger } from "./middlewares/requestLogger";
 import { apiRouter } from "./routes";
 
@@ -12,7 +13,7 @@ app.use(requestLogger);
 
 app.use("/api", apiRouter);
 
-app.post("/users", async (req, res) => {
+app.post("/users", async (req: Request, res: Response) => {
   try {
     const newUser = await User.create(req.body);
     res.status(201).json(newUser);
@@ -21,7 +22,7 @@ app.post("/users", async (req, res) => {
   }
 });
 
-app.use((req, res) => {
+app.use((req: Request, res: Response) => {
   res.status(404).json({ error: "Not Found" });
 });
 
