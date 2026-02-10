@@ -11,3 +11,25 @@ export async function getUsers(_req: Request, res: Response) {
     res.status(500).json({ error: "Failed to fetch users" });
   }
 }
+
+export async function registerUser(req: Request, res: Response) {
+  const { username, email, role, isActive } = req.body ?? {};
+
+  if (!username || !email) {
+    res.status(400).json({ error: "Username and email are required" });
+    return;
+  }
+
+  try {
+    const newUser = await User.create({
+      username,
+      email,
+      role,
+      isActive,
+    });
+    res.status(201).json(newUser);
+  } catch (error) {
+    console.error("Failed to create user:", error);
+    res.status(400).json({ error: "Failed to create user" });
+  }
+}
