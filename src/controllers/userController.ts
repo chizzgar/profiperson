@@ -4,7 +4,7 @@ import { User } from "../models/User";
 
 export async function getUsers(_req: Request, res: Response) {
   try {
-    const users = await User.find().lean();
+    const users = await User.find().select("-password").lean();
     res.json(users);
   } catch (error) {
     console.error("Failed to fetch users:", error);
@@ -13,10 +13,10 @@ export async function getUsers(_req: Request, res: Response) {
 }
 
 export async function registerUser(req: Request, res: Response) {
-  const { username, email, role, isActive } = req.body ?? {};
+  const { username, email, password, role, isActive } = req.body ?? {};
 
-  if (!username || !email) {
-    res.status(400).json({ error: "Username and email are required" });
+  if (!username || !email || !password) {
+    res.status(400).json({ error: "Username, email, and password are required" });
     return;
   }
 
@@ -24,10 +24,13 @@ export async function registerUser(req: Request, res: Response) {
     const newUser = await User.create({
       username,
       email,
+      password,
       role,
       isActive,
     });
-    res.status(201).json(newUser);
+    const user = newUser.toObject();
+    delete user.password;
+    res.status(201).json(user);
   } catch (error) {
     console.error("Failed to create user:", error);
     res.status(400).json({ error: "Failed to create user" });
