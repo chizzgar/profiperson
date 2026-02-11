@@ -28,8 +28,7 @@ export async function registerUser(req: Request, res: Response) {
       role,
       isActive,
     });
-    const user = newUser.toObject();
-    delete user.password;
+    const { password: _password, ...user } = newUser.toObject();
     res.status(201).json(user);
   } catch (error) {
     console.error("Failed to create user:", error);
