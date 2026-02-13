@@ -1,6 +1,8 @@
 import type { Request, Response } from "express";
+import bcrypt from "bcryptjs";
 
 import { User } from "../models/User";
+import { env } from "../config/env";
 
 export async function getUsers(_req: Request, res: Response) {
   try {
@@ -21,10 +23,11 @@ export async function registerUser(req: Request, res: Response) {
   }
 
   try {
+    const hashedPassword = await bcrypt.hash(password, env.bcryptSaltRounds);
     const newUser = await User.create({
       username,
       email,
-      password,
+      password: hashedPassword,
       role,
       isActive,
     });
