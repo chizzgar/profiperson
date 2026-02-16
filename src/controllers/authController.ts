@@ -1,7 +1,9 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcryptjs";
+import jwt, { type SignOptions } from "jsonwebtoken";
 
 import { User } from "../models/User";
+import { env } from "../config/env";
 
 export async function loginUser(req: Request, res: Response) {
   const { email, password } = req.body ?? {};
@@ -24,8 +26,18 @@ export async function loginUser(req: Request, res: Response) {
       return;
     }
 
+    const token = jwt.sign(
+      {
+        sub: user._id.toString(),
+        email: user.email,
+        role: user.role,
+      },
+      env.jwtSecret,
+      { expiresIn: env.jwtExpiresIn as SignOptions["expiresIn"] },
+    );
+
     const { password: _password, ...safeUser } = user.toObject();
-    res.json(safeUser);
+    res.json({ token, user: safeUser });
   } catch (error) {
     console.error("Failed to login user:", error);
     res.status(500).json({ error: "Failed to login user" });
